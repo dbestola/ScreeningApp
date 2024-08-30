@@ -5,7 +5,7 @@ import Text "mo:base/Text";
 actor ApplicantsDatabase {
 
   type Applicant = {
-    name : Text;
+    fullName : Text;
     age : Nat;
     yearOfExperience : Nat;
     email : Text;
@@ -15,9 +15,9 @@ actor ApplicantsDatabase {
 
   let DbHeaders = ["Name", "Age", "yearsOfExperience", "Eligibility"];
 
-  public func registerApplicant(applicant : Applicant) : async Text {
+  public func registerApplicants(applicant : Applicant) : async Text {
     let _ = applicantDB.add(applicant);
-    return "Application Successful, you can go on and check your Eligibility Status";
+    return "Application Successful, Proceed to check your Eligibility Status";
   };
 
   public query func getNumberOfapplicants() : async Nat {
@@ -33,73 +33,73 @@ actor ApplicantsDatabase {
     for (applicant in applicantSnapshot.vals()) {
       if (applicant.age >= 18) {
         numberOfEligibleApplicantsByAge += 1;
-      }
-     
+      };
+
     };
 
-   return "Out of " # toText(numberOfApplicants) # " applicants, " #
-           toText(numberOfEligibleApplicantsByAge) # " are above 18 years which is the Minimum Requirement for Eligibility" #
-           " and " # toText(numberOfEligibleApplicantsByExperience) # " are eligible based on Years of Experience.";
+    return "Out of " # toText(numberOfApplicants) # " applicants that registered, " #
+    toText(numberOfEligibleApplicantsByAge) # "meet the required age of 18 years and above" #
+    " and " # toText(numberOfEligibleApplicantsByExperience) # "has at least 3 years of Experience which is also a requirement for Qualification to the next Stage.";
   };
 
-  public query func applicantsEligibleByAge() : async Nat {
+  public query func getApplicantsEligibleByAge() : async Nat {
+
     var numberOfEligibleApplicantsByAge : Nat = 0;
+
     let applicantSnapshot = Buffer.toArray(applicantDB);
 
     for (applicant in applicantSnapshot.vals()) {
       if (applicant.age >= 18) {
         numberOfEligibleApplicantsByAge += 1;
-      }
+      };
     };
 
     return numberOfEligibleApplicantsByAge;
   };
 
-    public query func applicantsEligibleByExperience() : async Nat {
+  public query func getApplicantsEligibleByExperience() : async Nat {
+
     var numberOfEligibleApplicantsByExperience : Nat = 0;
+
     let applicantSnapshot = Buffer.toArray(applicantDB);
 
     for (applicant in applicantSnapshot.vals()) {
       if (applicant.yearOfExperience >= 3) {
         numberOfEligibleApplicantsByExperience += 1;
-      }
+      };
     };
 
     return numberOfEligibleApplicantsByExperience;
   };
 
+  public query func getEligibilityList() : async Text {
+    var csvText = "";
 
+    for (index in DbHeaders.keys()) {
+      let header = DbHeaders[index];
 
-public query func listOfApplicants_With_EligibilityStatus() : async Text {
-  var csvText = "";
-
-  for (index in DbHeaders.keys()) {
-    let header = DbHeaders[index];
-
-    if (index == DbHeaders.size() - 1) {
-      csvText #= header # "\n";
-    } else {
-      csvText #= header # ",";
-    };
-  };
-
-  let applicantSnapshot = Buffer.toArray(applicantDB);
-  for (applicant in applicantSnapshot.vals()) {
-    csvText #= applicant.name # ",";
-    csvText #= toText(applicant.age) # ",";
-    csvText #= toText(applicant.yearOfExperience) # ",";
-
-    let eligibility = if (applicant.age >= 18 and applicant.yearOfExperience >= 3) {
-      "eligible"
-    } else {
-      "not eligible"
+      if (index == DbHeaders.size() - 1) {
+        csvText #= header # "\n";
+      } else {
+        csvText #= header # ",";
+      };
     };
 
-    csvText #= eligibility # "\n";
+    let applicantSnapshot = Buffer.toArray(applicantDB);
+    for (applicant in applicantSnapshot.vals()) {
+      csvText #= applicant.fullName # ",";
+      csvText #= toText(applicant.age) # ",";
+      csvText #= toText(applicant.yearOfExperience) # ",";
+
+      let eligibility = if (applicant.age >= 18 and applicant.yearOfExperience >= 3) {
+        "eligible";
+      } else {
+        "not eligible";
+      };
+
+      csvText #= eligibility # "\n";
+    };
+    return csvText;
   };
-  return csvText;
-};
 
 };
-
-
