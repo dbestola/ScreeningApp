@@ -42,8 +42,8 @@ actor ApplicantsDatabase {
     };
 
     return "Out of " # toText(numberOfApplicants) # " applicants that registered, " #
-    toText(numberOfEligibleApplicantsByAge) # "meet the required age of 18 years and above" #
-    " and " # toText(numberOfEligibleApplicantsByExperience) # "has at least 3 years of Experience which is also a requirement for Qualification to the next Stage.";
+    toText(numberOfEligibleApplicantsByAge) # " applicants meet the required age of 18 years and above" #
+    " and " # toText(numberOfEligibleApplicantsByExperience) # " applicants has at least 3 years of Experience which is also a requirement for Qualification to the next Stage.";
   };
 
   public query func getApplicantsEligibleByAge() : async Nat {
@@ -96,9 +96,9 @@ actor ApplicantsDatabase {
       csvText #= toText(applicant.yearOfExperience) # ",";
 
       let eligibility = if (applicant.age >= 18 and applicant.yearOfExperience >= 3) {
-        "eligible";
+        "Congratulations! you are Eligible";
       } else {
-        "not eligible";
+        "Sorry! you are not Eligible";
       };
 
       csvText #= eligibility # "\n";
