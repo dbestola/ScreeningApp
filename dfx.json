@@ -1,0 +1,16 @@
+{
+  "canisters": {
+    "ScreeningApp_backend": {
+      "main": "src/ScreeningApp_backend/main.mo",
+      "type": "motoko"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
