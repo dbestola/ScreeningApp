@@ -35,6 +35,10 @@ actor ApplicantsDatabase {
         numberOfEligibleApplicantsByAge += 1;
       };
 
+       if (applicant.yearOfExperience >= 3) {
+        numberOfEligibleApplicantsByExperience += 1;
+      };
+
     };
 
     return "Out of " # toText(numberOfApplicants) # " applicants that registered, " #
