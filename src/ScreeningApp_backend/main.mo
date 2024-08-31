@@ -1,14 +1,19 @@
 import Buffer "mo:base/Buffer";
 import { toText } "mo:base/Nat";
 import Text "mo:base/Text";
+import Nat "mo:base/Nat";
 
 actor ApplicantsDatabase {
 
   type Applicant = {
     fullName : Text;
     age : Nat;
-    yearOfExperience : Nat;
+    yearsOfExperience : Nat;
     email : Text;
+    portfolioURL : Text;
+    currentSalary : Text;
+    expectedSalary : Text;
+    noticePeriod : Text;
   };
 
   var applicantDB = Buffer.Buffer<Applicant>(0);
@@ -30,12 +35,12 @@ actor ApplicantsDatabase {
     var numberOfEligibleApplicantsByExperience : Nat = 0;
 
     let applicantSnapshot = Buffer.toArray(applicantDB);
-    for (applicant in applicantSnapshot.vals()) {
-      if (applicant.age >= 18) {
+    for (applicants in applicantSnapshot.vals()) {
+      if (applicants.age >= 18) {
         numberOfEligibleApplicantsByAge += 1;
       };
 
-       if (applicant.yearOfExperience >= 3) {
+      if (applicants.yearsOfExperience >= 3) {
         numberOfEligibleApplicantsByExperience += 1;
       };
 
@@ -52,8 +57,8 @@ actor ApplicantsDatabase {
 
     let applicantSnapshot = Buffer.toArray(applicantDB);
 
-    for (applicant in applicantSnapshot.vals()) {
-      if (applicant.age >= 18) {
+    for (applicants in applicantSnapshot.vals()) {
+      if (applicants.age >= 18) {
         numberOfEligibleApplicantsByAge += 1;
       };
     };
@@ -67,8 +72,8 @@ actor ApplicantsDatabase {
 
     let applicantSnapshot = Buffer.toArray(applicantDB);
 
-    for (applicant in applicantSnapshot.vals()) {
-      if (applicant.yearOfExperience >= 3) {
+    for (applicants in applicantSnapshot.vals()) {
+      if (applicants.yearsOfExperience >= 3) {
         numberOfEligibleApplicantsByExperience += 1;
       };
     };
@@ -90,15 +95,15 @@ actor ApplicantsDatabase {
     };
 
     let applicantSnapshot = Buffer.toArray(applicantDB);
-    for (applicant in applicantSnapshot.vals()) {
-      csvText #= applicant.fullName # ",";
-      csvText #= toText(applicant.age) # ",";
-      csvText #= toText(applicant.yearOfExperience) # ",";
+    for (applicants in applicantSnapshot.vals()) {
+      csvText #= applicants.fullName # ",";
+      csvText #= toText(applicants.age) # ",";
+      csvText #= toText(applicants.yearsOfExperience) # ",";
 
-      let eligibility = if (applicant.age >= 18 and applicant.yearOfExperience >= 3) {
-        "Congratulations! you are Eligible";
+      let eligibility = if (applicants.age >= 18 and applicants.yearsOfExperience >= 3) {
+        "Congratulations..! you are Eligible";
       } else {
-        "Sorry! you are not Eligible";
+        "Sorry..! you are not Eligible";
       };
 
       csvText #= eligibility # "\n";
